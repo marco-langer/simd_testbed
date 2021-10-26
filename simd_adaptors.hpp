@@ -1,7 +1,7 @@
-#ifndef SIMD_ADAPTORS_H
-#define SIMD_ADAPTORS_H
+#ifndef SIMD_ADAPTORS_HPP
+#define SIMD_ADAPTORS_HPP
 
-#include "linalg.h"
+#include "linalg.hpp"
 
 #include <array>
 #include <experimental/simd>
@@ -12,9 +12,7 @@ using Vec3_simd = std::array<stdx::native_simd<float>, 3>;
 
 /* linalg adaptors */
 
-namespace la {
-
-namespace traits {
+namespace la::traits {
 
 template <>
 struct value_type<Vec3_simd> {
@@ -65,8 +63,6 @@ struct access<Vec3_simd, 2> {
   }
 };
 
-} // namespace traits
-
-} // namespace la
+} // namespace la::traits
 
 #endif

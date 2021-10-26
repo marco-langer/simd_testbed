@@ -35,9 +35,9 @@ Disassembly of section .text:
   69:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
 
 0000000000000070 <_Z23la_dot_product_std_simdRKSt5arrayINSt12experimental14parallelism_v24simdIfNS1_8simd_abi13_VecBltnBtmskILi64EEEEELm3EES9_>:
-  70:	62 f1 7c 48 28 0e    	vmovaps (%rsi),%zmm1
+  70:	62 f1 7c 48 28 0f    	vmovaps (%rdi),%zmm1
   76:	62 f1 7c 48 28 56 01 	vmovaps 0x40(%rsi),%zmm2
-  7d:	62 f1 74 48 59 07    	vmulps (%rdi),%zmm1,%zmm0
+  7d:	62 f1 74 48 59 06    	vmulps (%rsi),%zmm1,%zmm0
   83:	62 f1 7c 48 28 5e 02 	vmovaps 0x80(%rsi),%zmm3
   8a:	62 f2 6d 48 b8 47 01 	vfmadd231ps 0x40(%rdi),%zmm2,%zmm0
   91:	62 f2 65 48 b8 47 02 	vfmadd231ps 0x80(%rdi),%zmm3,%zmm0

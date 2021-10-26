@@ -1,5 +1,5 @@
-#include "naive_adaptors.h"
-#include "simd_adaptors.h"
+#include "naive_adaptors.hpp"
+#include "simd_adaptors.hpp"
 
 float
 dot_product_naive(Vec3 const & lhs, Vec3 const & rhs) {

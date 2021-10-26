@@ -1,7 +1,7 @@
-#ifndef NAIVE_ADAPTORS_H
-#define NAIVE_ADAPTORS_H
+#ifndef NAIVE_ADAPTORS_HPP
+#define NAIVE_ADAPTORS_HPP
 
-#include "linalg.h"
+#include "linalg.hpp"
 
 #include <array>
 
@@ -9,9 +9,7 @@ using Vec3 = std::array<float, 3>;
 
 /* linalg adaptors */
 
-namespace la {
-
-namespace traits {
+namespace la::traits {
 
 template <>
 struct value_type<Vec3> {
@@ -62,8 +60,6 @@ struct access<Vec3, 2> {
   }
 };
 
-} // namespace traits
-
-} // namespace la
+} // namespace la::traits
 
 #endif
