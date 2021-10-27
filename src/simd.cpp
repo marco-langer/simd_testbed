@@ -20,4 +20,3 @@ stdx::native_simd<float>
 la_dot_product_std_simd(Vec3_simd const & lhs, Vec3_simd const & rhs) {
   return la::dot_product(lhs, rhs);
 }
-
