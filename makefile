@@ -7,7 +7,7 @@ SRC_DIR := src
 .PHONY: all clean pre post
 
 CXX := g++
-CXXFLAGS := -c -g -std=c++20 -Wall -Wextra -Wpedantic -Werror -O2 -march=skylake-avx512
+CXXFLAGS := -c -g -std=c++20 -Wall -Wextra -Wpedantic -Werror -O2 -march=skylake-avx512 -ftree-vectorize
 LDFLAGS := -g
 OBJ := $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/$(OBJ_DIR)/%.o, $(wildcard $(SRC_DIR)/*.cpp))
 DEPS := $(patsubst %.o, %.d, $(OBJ))
