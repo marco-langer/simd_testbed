@@ -1,0 +1,44 @@
+
+dot_product.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <_Z17dot_product_naiveRKSt5arrayIfLm3EES2_>:
+   0:	c5 fa 10 47 04       	vmovss 0x4(%rdi),%xmm0
+   5:	c5 fa 10 0f          	vmovss (%rdi),%xmm1
+   9:	c5 fa 59 46 04       	vmulss 0x4(%rsi),%xmm0,%xmm0
+   e:	c5 fa 10 57 08       	vmovss 0x8(%rdi),%xmm2
+  13:	c4 e2 71 b9 06       	vfmadd231ss (%rsi),%xmm1,%xmm0
+  18:	c4 e2 69 b9 46 08    	vfmadd231ss 0x8(%rsi),%xmm2,%xmm0
+  1e:	c3                   	retq   
+  1f:	90                   	nop
+
+0000000000000020 <_Z20la_dot_product_naiveRKSt5arrayIfLm3EES2_>:
+  20:	c5 fa 10 47 04       	vmovss 0x4(%rdi),%xmm0
+  25:	c5 fa 10 0f          	vmovss (%rdi),%xmm1
+  29:	c5 fa 59 46 04       	vmulss 0x4(%rsi),%xmm0,%xmm0
+  2e:	c5 fa 10 57 08       	vmovss 0x8(%rdi),%xmm2
+  33:	c4 e2 71 b9 06       	vfmadd231ss (%rsi),%xmm1,%xmm0
+  38:	c4 e2 69 b9 46 08    	vfmadd231ss 0x8(%rsi),%xmm2,%xmm0
+  3e:	c3                   	retq   
+  3f:	90                   	nop
+
+0000000000000040 <_Z20dot_product_std_simdRKSt5arrayINSt12experimental14parallelism_v24simdIfNS1_8simd_abi11_VecBuiltinILi32EEEEELm3EES9_>:
+  40:	c5 fc 28 4f 20       	vmovaps 0x20(%rdi),%ymm1
+  45:	c5 fc 28 57 40       	vmovaps 0x40(%rdi),%ymm2
+  4a:	c5 f4 59 46 20       	vmulps 0x20(%rsi),%ymm1,%ymm0
+  4f:	c5 fc 28 1f          	vmovaps (%rdi),%ymm3
+  53:	c4 e2 6d b8 46 40    	vfmadd231ps 0x40(%rsi),%ymm2,%ymm0
+  59:	c4 e2 65 b8 06       	vfmadd231ps (%rsi),%ymm3,%ymm0
+  5e:	c3                   	retq   
+  5f:	90                   	nop
+
+0000000000000060 <_Z23la_dot_product_std_simdRKSt5arrayINSt12experimental14parallelism_v24simdIfNS1_8simd_abi11_VecBuiltinILi32EEEEELm3EES9_>:
+  60:	c5 fc 28 4e 20       	vmovaps 0x20(%rsi),%ymm1
+  65:	c5 fc 28 56 40       	vmovaps 0x40(%rsi),%ymm2
+  6a:	c5 f4 59 47 20       	vmulps 0x20(%rdi),%ymm1,%ymm0
+  6f:	c5 fc 28 1e          	vmovaps (%rsi),%ymm3
+  73:	c4 e2 6d b8 47 40    	vfmadd231ps 0x40(%rdi),%ymm2,%ymm0
+  79:	c4 e2 65 b8 07       	vfmadd231ps (%rdi),%ymm3,%ymm0
+  7e:	c3                   	retq   

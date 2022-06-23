@@ -1,0 +1,54 @@
+
+dot_product.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <_Z17dot_product_naiveRKSt5arrayIfLm3EES2_>:
+   0:	f3 0f 10 07          	movss  (%rdi),%xmm0
+   4:	f3 0f 10 4f 04       	movss  0x4(%rdi),%xmm1
+   9:	f3 0f 59 06          	mulss  (%rsi),%xmm0
+   d:	f3 0f 59 4e 04       	mulss  0x4(%rsi),%xmm1
+  12:	f3 0f 58 c1          	addss  %xmm1,%xmm0
+  16:	f3 0f 10 4f 08       	movss  0x8(%rdi),%xmm1
+  1b:	f3 0f 59 4e 08       	mulss  0x8(%rsi),%xmm1
+  20:	f3 0f 58 c1          	addss  %xmm1,%xmm0
+  24:	c3                   	retq   
+  25:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+  2c:	00 00 00 00 
+
+0000000000000030 <_Z20la_dot_product_naiveRKSt5arrayIfLm3EES2_>:
+  30:	f3 0f 10 07          	movss  (%rdi),%xmm0
+  34:	f3 0f 10 4f 04       	movss  0x4(%rdi),%xmm1
+  39:	f3 0f 59 06          	mulss  (%rsi),%xmm0
+  3d:	f3 0f 59 4e 04       	mulss  0x4(%rsi),%xmm1
+  42:	f3 0f 58 c1          	addss  %xmm1,%xmm0
+  46:	f3 0f 10 4f 08       	movss  0x8(%rdi),%xmm1
+  4b:	f3 0f 59 4e 08       	mulss  0x8(%rsi),%xmm1
+  50:	f3 0f 58 c1          	addss  %xmm1,%xmm0
+  54:	c3                   	retq   
+  55:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+  5c:	00 00 00 00 
+
+0000000000000060 <_Z20dot_product_std_simdRKSt5arrayINSt12experimental14parallelism_v24simdIfNS1_8simd_abi11_VecBuiltinILi16EEEEELm3EES9_>:
+  60:	0f 28 07             	movaps (%rdi),%xmm0
+  63:	0f 28 4f 10          	movaps 0x10(%rdi),%xmm1
+  67:	0f 59 06             	mulps  (%rsi),%xmm0
+  6a:	0f 59 4e 10          	mulps  0x10(%rsi),%xmm1
+  6e:	0f 58 c1             	addps  %xmm1,%xmm0
+  71:	0f 28 4f 20          	movaps 0x20(%rdi),%xmm1
+  75:	0f 59 4e 20          	mulps  0x20(%rsi),%xmm1
+  79:	0f 58 c1             	addps  %xmm1,%xmm0
+  7c:	c3                   	retq   
+  7d:	0f 1f 00             	nopl   (%rax)
+
+0000000000000080 <_Z23la_dot_product_std_simdRKSt5arrayINSt12experimental14parallelism_v24simdIfNS1_8simd_abi11_VecBuiltinILi16EEEEELm3EES9_>:
+  80:	0f 28 46 10          	movaps 0x10(%rsi),%xmm0
+  84:	0f 28 0e             	movaps (%rsi),%xmm1
+  87:	0f 59 47 10          	mulps  0x10(%rdi),%xmm0
+  8b:	0f 59 0f             	mulps  (%rdi),%xmm1
+  8e:	0f 58 c1             	addps  %xmm1,%xmm0
+  91:	0f 28 4e 20          	movaps 0x20(%rsi),%xmm1
+  95:	0f 59 4f 20          	mulps  0x20(%rdi),%xmm1
+  99:	0f 58 c1             	addps  %xmm1,%xmm0
+  9c:	c3                   	retq   
