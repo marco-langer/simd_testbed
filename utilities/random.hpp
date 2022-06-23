@@ -1,7 +1,7 @@
 #ifndef SIMD_TESTBED_UTILITIES_RANDOM_HPP
 #define SIMD_TESTBED_UTILITIES_RANDOM_HPP
 
-#include <simd_testbed/algorithm/traits.hpp>
+#include <simd_testbed/traits.hpp>
 
 #include <concepts>
 #include <cstdint>
@@ -14,8 +14,9 @@ namespace st::utilities {
 template <std::integral I>
 class random_generator
 {
-    using promoted_type = std::common_type_t
+    using promoted_type = std::conditional_t
     <
+        (sizeof(I) > 1),
         I,
         std::conditional_t
         <

@@ -13,7 +13,7 @@
 template <typename I>
 static void max_value(benchmark::State& state)
 {
-    auto const v = st::utilities::generate_data<I>();
+    auto const v = st::utilities::generate_random_data<I>();
 
     for (auto _ : state)
     {
@@ -25,7 +25,7 @@ static void max_value(benchmark::State& state)
 template <typename I>
 static void max_value_cpp(benchmark::State& state)
 {
-    auto const v = st::utilities::generate_data<I>();
+    auto const v = st::utilities::generate_random_data<I>();
 
     for (auto _ : state)
     {
@@ -37,7 +37,7 @@ static void max_value_cpp(benchmark::State& state)
 template <typename I>
 static void std_max_element(benchmark::State& state)
 {
-    auto const v = st::utilities::generate_data<I>();
+    auto const v = st::utilities::generate_random_data<I>();
 
     for (auto _ : state)
     {
@@ -49,7 +49,7 @@ static void std_max_element(benchmark::State& state)
 template <typename I>
 static void std_ranges_max_element(benchmark::State& state)
 {
-    auto const v = st::utilities::generate_data<I>();
+    auto const v = st::utilities::generate_random_data<I>();
 
     for (auto _ : state)
     {

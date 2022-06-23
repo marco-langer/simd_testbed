@@ -1,0 +1,133 @@
+
+add.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <_Z13add_saturatedPaS_a>:
+   0:	41 89 d0             	mov    %edx,%r8d
+   3:	0f be c2             	movsbl %dl,%eax
+   6:	84 d2                	test   %dl,%dl
+   8:	78 56                	js     60 <_Z13add_saturatedPaS_a+0x60>
+   a:	b9 7f 00 00 00       	mov    $0x7f,%ecx
+   f:	29 c1                	sub    %eax,%ecx
+  11:	48 39 f7             	cmp    %rsi,%rdi
+  14:	74 46                	je     5c <_Z13add_saturatedPaS_a+0x5c>
+  16:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+  1d:	00 00 00 
+  20:	0f be 17             	movsbl (%rdi),%edx
+  23:	89 d0                	mov    %edx,%eax
+  25:	39 d1                	cmp    %edx,%ecx
+  27:	7c 17                	jl     40 <_Z13add_saturatedPaS_a+0x40>
+  29:	44 01 c0             	add    %r8d,%eax
+  2c:	48 83 c7 01          	add    $0x1,%rdi
+  30:	88 47 ff             	mov    %al,-0x1(%rdi)
+  33:	48 39 fe             	cmp    %rdi,%rsi
+  36:	75 e8                	jne    20 <_Z13add_saturatedPaS_a+0x20>
+  38:	c3                   	retq   
+  39:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+  40:	c6 07 7f             	movb   $0x7f,(%rdi)
+  43:	48 83 c7 01          	add    $0x1,%rdi
+  47:	48 39 fe             	cmp    %rdi,%rsi
+  4a:	75 d4                	jne    20 <_Z13add_saturatedPaS_a+0x20>
+  4c:	c3                   	retq   
+  4d:	0f 1f 00             	nopl   (%rax)
+  50:	c6 07 80             	movb   $0x80,(%rdi)
+  53:	48 83 c7 01          	add    $0x1,%rdi
+  57:	48 39 fe             	cmp    %rdi,%rsi
+  5a:	75 14                	jne    70 <_Z13add_saturatedPaS_a+0x70>
+  5c:	c3                   	retq   
+  5d:	0f 1f 00             	nopl   (%rax)
+  60:	48 39 f7             	cmp    %rsi,%rdi
+  63:	74 f7                	je     5c <_Z13add_saturatedPaS_a+0x5c>
+  65:	b9 80 ff ff ff       	mov    $0xffffff80,%ecx
+  6a:	29 c1                	sub    %eax,%ecx
+  6c:	0f 1f 40 00          	nopl   0x0(%rax)
+  70:	0f be 17             	movsbl (%rdi),%edx
+  73:	89 d0                	mov    %edx,%eax
+  75:	39 d1                	cmp    %edx,%ecx
+  77:	7f d7                	jg     50 <_Z13add_saturatedPaS_a+0x50>
+  79:	44 01 c0             	add    %r8d,%eax
+  7c:	48 83 c7 01          	add    $0x1,%rdi
+  80:	88 47 ff             	mov    %al,-0x1(%rdi)
+  83:	48 39 fe             	cmp    %rdi,%rsi
+  86:	75 e8                	jne    70 <_Z13add_saturatedPaS_a+0x70>
+  88:	c3                   	retq   
+  89:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+
+0000000000000090 <_Z20add_saturated_intrinPaS_a>:
+  90:	41 89 d0             	mov    %edx,%r8d
+  93:	41 89 d1             	mov    %edx,%r9d
+  96:	44 0f be d2          	movsbl %dl,%r10d
+  9a:	48 89 f2             	mov    %rsi,%rdx
+  9d:	c4 c1 79 6e c8       	vmovd  %r8d,%xmm1
+  a2:	48 29 fa             	sub    %rdi,%rdx
+  a5:	c4 e2 7d 78 c9       	vpbroadcastb %xmm1,%ymm1
+  aa:	48 83 fa 1f          	cmp    $0x1f,%rdx
+  ae:	7e 45                	jle    f5 <_Z20add_saturated_intrinPaS_a+0x65>
+  b0:	48 8d 4a e0          	lea    -0x20(%rdx),%rcx
+  b4:	48 89 f8             	mov    %rdi,%rax
+  b7:	48 89 ca             	mov    %rcx,%rdx
+  ba:	48 83 e2 e0          	and    $0xffffffffffffffe0,%rdx
+  be:	48 8d 54 17 20       	lea    0x20(%rdi,%rdx,1),%rdx
+  c3:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+  c8:	c5 fa 6f 10          	vmovdqu (%rax),%xmm2
+  cc:	c4 e3 6d 38 40 10 01 	vinserti128 $0x1,0x10(%rax),%ymm2,%ymm0
+  d3:	48 83 c0 20          	add    $0x20,%rax
+  d7:	c5 fd ec c1          	vpaddsb %ymm1,%ymm0,%ymm0
+  db:	c5 fa 7f 40 e0       	vmovdqu %xmm0,-0x20(%rax)
+  e0:	c4 e3 7d 39 40 f0 01 	vextracti128 $0x1,%ymm0,-0x10(%rax)
+  e7:	48 39 c2             	cmp    %rax,%rdx
+  ea:	75 dc                	jne    c8 <_Z20add_saturated_intrinPaS_a+0x38>
+  ec:	48 83 e1 e0          	and    $0xffffffffffffffe0,%rcx
+  f0:	48 8d 7c 0f 20       	lea    0x20(%rdi,%rcx,1),%rdi
+  f5:	45 84 c0             	test   %r8b,%r8b
+  f8:	78 46                	js     140 <_Z20add_saturated_intrinPaS_a+0xb0>
+  fa:	b9 7f 00 00 00       	mov    $0x7f,%ecx
+  ff:	44 29 d1             	sub    %r10d,%ecx
+ 102:	48 39 fe             	cmp    %rdi,%rsi
+ 105:	74 21                	je     128 <_Z20add_saturated_intrinPaS_a+0x98>
+ 107:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
+ 10e:	00 00 
+ 110:	0f be 17             	movsbl (%rdi),%edx
+ 113:	89 d0                	mov    %edx,%eax
+ 115:	39 ca                	cmp    %ecx,%edx
+ 117:	7f 17                	jg     130 <_Z20add_saturated_intrinPaS_a+0xa0>
+ 119:	44 01 c8             	add    %r9d,%eax
+ 11c:	48 83 c7 01          	add    $0x1,%rdi
+ 120:	88 47 ff             	mov    %al,-0x1(%rdi)
+ 123:	48 39 fe             	cmp    %rdi,%rsi
+ 126:	75 e8                	jne    110 <_Z20add_saturated_intrinPaS_a+0x80>
+ 128:	c5 f8 77             	vzeroupper 
+ 12b:	c3                   	retq   
+ 12c:	0f 1f 40 00          	nopl   0x0(%rax)
+ 130:	c6 07 7f             	movb   $0x7f,(%rdi)
+ 133:	48 83 c7 01          	add    $0x1,%rdi
+ 137:	48 39 fe             	cmp    %rdi,%rsi
+ 13a:	75 d4                	jne    110 <_Z20add_saturated_intrinPaS_a+0x80>
+ 13c:	c5 f8 77             	vzeroupper 
+ 13f:	c3                   	retq   
+ 140:	48 39 fe             	cmp    %rdi,%rsi
+ 143:	74 e3                	je     128 <_Z20add_saturated_intrinPaS_a+0x98>
+ 145:	b9 80 ff ff ff       	mov    $0xffffff80,%ecx
+ 14a:	44 29 d1             	sub    %r10d,%ecx
+ 14d:	0f 1f 00             	nopl   (%rax)
+ 150:	0f be 17             	movsbl (%rdi),%edx
+ 153:	89 d0                	mov    %edx,%eax
+ 155:	39 ca                	cmp    %ecx,%edx
+ 157:	7c 18                	jl     171 <_Z20add_saturated_intrinPaS_a+0xe1>
+ 159:	44 01 c8             	add    %r9d,%eax
+ 15c:	48 83 c7 01          	add    $0x1,%rdi
+ 160:	88 47 ff             	mov    %al,-0x1(%rdi)
+ 163:	48 39 fe             	cmp    %rdi,%rsi
+ 166:	74 c0                	je     128 <_Z20add_saturated_intrinPaS_a+0x98>
+ 168:	0f be 17             	movsbl (%rdi),%edx
+ 16b:	89 d0                	mov    %edx,%eax
+ 16d:	39 ca                	cmp    %ecx,%edx
+ 16f:	7d e8                	jge    159 <_Z20add_saturated_intrinPaS_a+0xc9>
+ 171:	c6 07 80             	movb   $0x80,(%rdi)
+ 174:	48 83 c7 01          	add    $0x1,%rdi
+ 178:	48 39 fe             	cmp    %rdi,%rsi
+ 17b:	75 d3                	jne    150 <_Z20add_saturated_intrinPaS_a+0xc0>
+ 17d:	c5 f8 77             	vzeroupper 
+ 180:	c3                   	retq   

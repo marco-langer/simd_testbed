@@ -2,14 +2,13 @@
 #define SIMD_TESTBED_ALGORITHM_ALGORITHM
 
 #include <simd_testbed/algorithm/detail/minmax_value_impl.hpp>
-#include <simd_testbed/algorithm/traits.hpp>
+#include <simd_testbed/traits.hpp>
 
 #include <iterator>
 
 namespace st {
 
-template <std::contiguous_iterator InIt, std::sentinel_for<InIt> S>
-    requires is_standard_arithmetic_v<typename InIt::value_type>
+template <arithmetic_contiguous_iterator InIt, std::sentinel_for<InIt> S>
 [[nodiscard]] auto
 max_value_avx(InIt first, S last)
     -> typename std::iterator_traits<InIt>::value_type
@@ -28,8 +27,7 @@ max_value_avx(InIt first, S last)
     }
 }
 
-template <std::contiguous_iterator InIt, std::sentinel_for<InIt> S>
-    requires is_standard_arithmetic_v<typename InIt::value_type>
+template <arithmetic_contiguous_iterator InIt, std::sentinel_for<InIt> S>
 [[nodiscard]] auto
 max_value(InIt first, S last)
     -> typename std::iterator_traits<InIt>::value_type

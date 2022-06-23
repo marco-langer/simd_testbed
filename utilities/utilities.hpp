@@ -8,7 +8,7 @@
 namespace st::utilities {
 
 template <std::integral I>
-[[nodiscard]] auto generate_data() -> std::vector<I>
+[[nodiscard]] auto generate_random_data() -> std::vector<I>
 {
     constexpr auto elements = 1024 * 1024;
     auto result = std::vector<I>{};
