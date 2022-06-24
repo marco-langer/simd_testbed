@@ -1,7 +1,7 @@
-set(TEST_NAME tests_numeric)
+set(TEST_NAME tests_dsp)
 
 set(TEST_SOURCES
-    add_saturated.cpp
+    filter_median.cpp
 )
 
 add_executable(${TEST_NAME} ${TEST_SOURCES})
