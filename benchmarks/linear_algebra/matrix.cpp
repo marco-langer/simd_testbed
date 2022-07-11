@@ -1,5 +1,6 @@
 #include "../../utilities/random.hpp"
 
+#include <simd_testbed/linear_algebra/matrix_cpp.hpp>
 #include <simd_testbed/linear_algebra/matrix.hpp>
 
 #include <benchmark/benchmark.h>
@@ -21,6 +22,14 @@ void fill_random(Matrix& matrix)
             matrix(i, j) = random();
         }
     }
+}
+
+template <st::matrix Matrix>
+[[nodiscard]] auto generate_random_matrix() -> Matrix
+{
+    auto result = Matrix{};
+    fill_random(result);
+    return result;
 }
 
 template <st::matrix Matrix>
@@ -51,7 +60,43 @@ static void matrix_mul(benchmark::State& state)
     }
 }
 
+template <st::matrix Matrix, st::matrix Vector>
+static void matrix_vec_mul(benchmark::State& state)
+{
+    auto vecs = generate_random_matrices<Vector>();
+    auto const mat = generate_random_matrix<Matrix>();
+
+    for (auto _ : state)
+    {
+        for (auto& vec : vecs)
+        {
+            vec = mat * vec;
+        }
+    }
+}
+
+
+BENCHMARK_TEMPLATE(matrix_mul, st::cpp::basic_matrix<float, 3, 3>);
+BENCHMARK_TEMPLATE(matrix_mul, st::cpp::basic_matrix<double, 3, 3>);
 BENCHMARK_TEMPLATE(matrix_mul, st::basic_matrix<float, 3, 3>);
 BENCHMARK_TEMPLATE(matrix_mul, st::basic_matrix<double, 3, 3>);
+
+BENCHMARK_TEMPLATE(matrix_mul, st::cpp::basic_matrix<float, 4, 4>);
+BENCHMARK_TEMPLATE(matrix_mul, st::cpp::basic_matrix<double, 4, 4>);
 BENCHMARK_TEMPLATE(matrix_mul, st::basic_matrix<float, 4, 4>);
 BENCHMARK_TEMPLATE(matrix_mul, st::basic_matrix<double, 4, 4>);
+
+BENCHMARK_TEMPLATE(matrix_mul, st::cpp::basic_matrix<float, 10, 10>);
+BENCHMARK_TEMPLATE(matrix_mul, st::cpp::basic_matrix<double, 10, 10>);
+BENCHMARK_TEMPLATE(matrix_mul, st::basic_matrix<float, 10, 10>);
+BENCHMARK_TEMPLATE(matrix_mul, st::basic_matrix<double, 10, 10>);
+
+BENCHMARK_TEMPLATE(matrix_mul, st::cpp::basic_matrix<float, 100, 100>);
+BENCHMARK_TEMPLATE(matrix_mul, st::cpp::basic_matrix<double, 100, 100>);
+BENCHMARK_TEMPLATE(matrix_mul, st::basic_matrix<float, 100, 100>);
+BENCHMARK_TEMPLATE(matrix_mul, st::basic_matrix<double, 100, 100>);
+
+BENCHMARK_TEMPLATE(matrix_vec_mul, st::cpp::basic_matrix<float, 4, 4>, st::cpp::basic_matrix<float, 4, 1>);
+BENCHMARK_TEMPLATE(matrix_vec_mul, st::cpp::basic_matrix<double, 4, 4>, st::cpp::basic_matrix<double, 4, 1>);
+BENCHMARK_TEMPLATE(matrix_vec_mul, st::basic_matrix<float, 4, 4>, st::basic_matrix<float, 4, 1>);
+BENCHMARK_TEMPLATE(matrix_vec_mul, st::basic_matrix<double, 4, 4>, st::basic_matrix<double, 4, 1>);

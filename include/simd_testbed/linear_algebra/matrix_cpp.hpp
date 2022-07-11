@@ -1,7 +1,7 @@
-#ifndef SIMD_TESTBED_LINEAR_ALGEBRA_MATRIX_HPP
-#define SIMD_TESTBED_LINEAR_ALGEBRA_MATRIX_HPP
+#ifndef SIMD_TESTBED_LINEAR_ALGEBRA_MATRIX_CPP_HPP
+#define SIMD_TESTBED_LINEAR_ALGEBRA_MATRIX_CPP_HPP
 
-#include <simd_testbed/linear_algebra/detail/matrix_impl.hpp>
+#include <simd_testbed/linear_algebra/detail/matrix_cpp_impl.hpp>
 #include <simd_testbed/linear_algebra/matrix_traits.hpp>
 
 #include <algorithm>
@@ -10,7 +10,7 @@
 #include <initializer_list>
 #include <type_traits>
 
-namespace st {
+namespace st::cpp {
 
 template <typename T, std::size_t Rows, std::size_t Cols>
 class basic_matrix
@@ -99,11 +99,17 @@ public:
     }
 
 private:
-    alignas (32) T data_[rows * cols];
+    T data_[rows * cols];
 };
 
+} // namespace st::cpp
+
+namespace st {
+
 template <typename T, std::size_t Rows, std::size_t Cols>
-struct is_matrix<basic_matrix<T, Rows, Cols>> : std::true_type {};
+struct is_matrix<cpp::basic_matrix<T, Rows, Cols>> : std::true_type {};
+
+namespace cpp {
 
 template
 <
@@ -118,9 +124,10 @@ operator*(
     -> basic_matrix<T, RowsLhs, ColsRhs>
     requires (ColsLhs == RowsRhs)
 {
-    return detail::matrix_mul_intrin(lhs, rhs);
+    return detail::matrix_mul(lhs, rhs);
 }
 
+} // namespace cpp
 } // namespace st
 
 #endif

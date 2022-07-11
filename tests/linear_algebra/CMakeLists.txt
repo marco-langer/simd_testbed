@@ -15,7 +15,7 @@ target_compile_options(${TEST_NAME} PRIVATE
         -Wall -Wextra -Wpedantic -Wundef -Wpointer-arith -Wno-long-long
         -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused
         -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion
-        -Wformat=2 -mavx2>
+        -Wformat=2 -mavx2 -mfma>
     $<$<CXX_COMPILER_ID:GNU>:
         -Wduplicated-branches -Wduplicated-cond -Wlogical-op -Wuseless-cast>
     $<$<CXX_COMPILER_ID:MSVC>:
