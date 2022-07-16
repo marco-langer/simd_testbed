@@ -17,3 +17,4 @@ FetchContent_MakeAvailable(
 add_subdirectory(algorithm)
 add_subdirectory(linear_algebra)
 add_subdirectory(numeric)
+add_subdirectory(statistics)
