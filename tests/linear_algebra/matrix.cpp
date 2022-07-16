@@ -4,20 +4,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 
-using matrix3x3f_cpp = st::cpp::basic_matrix<float, 3, 3>;
-using matrix4x4f_cpp = st::cpp::basic_matrix<float, 4, 4>;
-using matrix2x3_cpp = st::cpp::basic_matrix<double, 2, 3>;
-using matrix3x2_cpp = st::cpp::basic_matrix<double, 3, 2>;
-using matrix2x2_cpp = st::cpp::basic_matrix<double, 2, 2>;
-using matrix3x3_cpp = st::cpp::basic_matrix<double, 3, 3>;
-
-using matrix3x3f = st::basic_matrix<float, 3, 3>;
-using matrix4x4f = st::basic_matrix<float, 4, 4>;
-using matrix2x3 = st::basic_matrix<double, 2, 3>;
-using matrix3x2 = st::basic_matrix<double, 3, 2>;
-using matrix2x2 = st::basic_matrix<double, 2, 2>;
-using matrix3x3 = st::basic_matrix<double, 3, 3>;
-
 TEMPLATE_TEST_CASE("linear_algebra.matrix_cpp.operator==", "", float, double)
 {
     auto const m1 = st::cpp::basic_matrix<TestType, 4, 4>
@@ -37,7 +23,6 @@ TEMPLATE_TEST_CASE("linear_algebra.matrix_cpp.operator==", "", float, double)
 
     REQUIRE(m1 == m2);
 }
-
 
 TEMPLATE_TEST_CASE("linear_algebra.matrix.operator==", "", float, double)
 {
@@ -354,6 +339,29 @@ TEMPLATE_TEST_CASE("linear_algebra.matrix.operator* 5x6 * 6x5", "", float, doubl
         1262.0, 1349.0, 1436.0, 1523.0, 1610.0,
         1748.0, 1871.0, 1994.0, 2117.0, 2240.0,
         2234.0, 2393.0, 2552.0, 2711.0, 2870.0
+    };
+
+    auto const m3 = m1 * m2;
+
+    REQUIRE(m3 == m3_expected);
+}
+
+TEMPLATE_TEST_CASE("linear_algebra.matrix.operator* 4x4 * 4x1", "", float, double)
+{
+    auto const m1 = st::basic_matrix<TestType, 4, 4>
+    {
+        0.0, 1.0, 2.0, 3.0,
+        4.0, 5.0, 6.0, 7.0,
+        8.0, 9.0, 10.0, 11.0,
+        12.0, 13.0, 14.0, 15.0
+    };
+    auto const m2 = st::basic_matrix<TestType, 4, 1>
+    {
+        0.0, 1.0, 2.0, 3.0
+    };
+    auto const m3_expected = st::basic_matrix<TestType, 4, 1>
+    {
+        14.0, 38.0, 62.0, 86.0
     };
 
     auto const m3 = m1 * m2;

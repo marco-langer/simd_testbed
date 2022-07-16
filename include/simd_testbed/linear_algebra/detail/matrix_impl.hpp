@@ -66,7 +66,7 @@ matrix_mul_intrin(
     for (std::size_t i = 0; i < result.rows; ++i)
     {
         std::size_t j = 0;
-        for (; j + simd_elements <= result.rows; j += simd_elements)
+        for (; j + simd_elements < result.rows; j += simd_elements)
         {
             __m256 result_vals = _mm256_setzero_ps();
             for (std::size_t k = 0; k < lhs.cols; ++k)
@@ -119,7 +119,7 @@ matrix_mul_intrin(
     for (std::size_t i = 0; i < result.rows; ++i)
     {
         std::size_t j = 0;
-        for (; j + simd_elements <= result.rows; j += simd_elements)
+        for (; j + simd_elements < result.rows; j += simd_elements)
         {
             __m256d result_vals = _mm256_setzero_pd();
             for (std::size_t k = 0; k < lhs.cols; ++k)
@@ -280,6 +280,92 @@ matrix_mul_intrin(
     result_row3 = _mm256_fmadd_pd(lhs_32, rhs_row2, result_row3);
     result_row3 = _mm256_fmadd_pd(lhs_33, rhs_row3, result_row3);
     _mm256_store_pd(&result_data[12], result_row3);
+
+    return result;
+}
+
+template <typename T>
+inline constexpr auto
+matrix_mul_intrin(
+        basic_matrix<T, 4, 4> const& lhs,
+        basic_matrix<T, 4, 1> const& rhs) noexcept
+    -> basic_matrix<T, 4, 1>
+    requires std::same_as<T, float>
+{
+    basic_matrix<T, 4, 1> result;
+    T const* mat_data = &*lhs.begin();
+    T const* vec_data = &*rhs.begin();
+    T* result_data = &*result.begin();
+
+    // load matrix rows and transpose to them get columns
+    __m128 mat_row_0 = _mm_loadu_ps(&mat_data[0]);
+    __m128 mat_row_1 = _mm_loadu_ps(&mat_data[4]);
+    __m128 mat_row_2 = _mm_loadu_ps(&mat_data[8]);
+    __m128 mat_row_3 = _mm_loadu_ps(&mat_data[12]);
+    __m128 tmp_0 = _mm_unpacklo_ps(mat_row_0, mat_row_1);
+    __m128 tmp_1 = _mm_unpackhi_ps(mat_row_0, mat_row_1);
+    __m128 tmp_2 = _mm_unpacklo_ps(mat_row_2, mat_row_3);
+    __m128 tmp_3 = _mm_unpackhi_ps(mat_row_2, mat_row_3);
+    __m128 mat_col_0 = _mm_movelh_ps(tmp_0, tmp_2);
+    __m128 mat_col_1 = _mm_movehl_ps(tmp_2, tmp_0);
+    __m128 mat_col_2 = _mm_movelh_ps(tmp_1, tmp_3);
+    __m128 mat_col_3 = _mm_movehl_ps(tmp_3, tmp_1);
+
+    // load vector
+    __m128 vec_0 = _mm_broadcast_ss(&vec_data[0]);
+    __m128 vec_1 = _mm_broadcast_ss(&vec_data[1]);
+    __m128 vec_2 = _mm_broadcast_ss(&vec_data[2]);
+    __m128 vec_3 = _mm_broadcast_ss(&vec_data[3]);
+
+    // multiply matrix and vector
+    __m128 result_vec = _mm_mul_ps(mat_col_0, vec_0);
+    result_vec = _mm_fmadd_ps(mat_col_1, vec_1, result_vec);
+    result_vec = _mm_fmadd_ps(mat_col_2, vec_2, result_vec);
+    result_vec = _mm_fmadd_ps(mat_col_3, vec_3, result_vec);
+    _mm_storeu_ps(&result_data[0], result_vec);
+
+    return result;
+}
+
+template <typename T>
+inline constexpr auto
+matrix_mul_intrin(
+        basic_matrix<T, 4, 4> const& lhs,
+        basic_matrix<T, 4, 1> const& rhs) noexcept
+    -> basic_matrix<T, 4, 1>
+    requires std::same_as<T, double>
+{
+    basic_matrix<T, 4, 1> result;
+    T const* mat_data = &*lhs.begin();
+    T const* vec_data = &*rhs.begin();
+    T* result_data = &*result.begin();
+
+    // load matrix rows and transpose to them get columns
+    __m256d mat_row_0 = _mm256_loadu_pd(&mat_data[0]);
+    __m256d mat_row_1 = _mm256_loadu_pd(&mat_data[4]);
+    __m256d mat_row_2 = _mm256_loadu_pd(&mat_data[8]);
+    __m256d mat_row_3 = _mm256_loadu_pd(&mat_data[12]);
+    __m256d tmp_0 = _mm256_unpacklo_pd(mat_row_0, mat_row_1);
+    __m256d tmp_1 = _mm256_unpackhi_pd(mat_row_0, mat_row_1);
+    __m256d tmp_2 = _mm256_unpacklo_pd(mat_row_2, mat_row_3);
+    __m256d tmp_3 = _mm256_unpackhi_pd(mat_row_2, mat_row_3);
+    __m256d mat_col_0 = _mm256_permute2f128_pd(tmp_0, tmp_2, 0x20);
+    __m256d mat_col_1 = _mm256_permute2f128_pd(tmp_1, tmp_3, 0x20);
+    __m256d mat_col_2 = _mm256_permute2f128_pd(tmp_0, tmp_2, 0x31);
+    __m256d mat_col_3 = _mm256_permute2f128_pd(tmp_1, tmp_3, 0x31);
+
+    // load vector
+    __m256d vec_0 = _mm256_broadcast_sd(&vec_data[0]);
+    __m256d vec_1 = _mm256_broadcast_sd(&vec_data[1]);
+    __m256d vec_2 = _mm256_broadcast_sd(&vec_data[2]);
+    __m256d vec_3 = _mm256_broadcast_sd(&vec_data[3]);
+
+    // multiply matrix and vector
+    __m256d result_vec = _mm256_mul_pd(mat_col_0, vec_0);
+    result_vec = _mm256_fmadd_pd(mat_col_1, vec_1, result_vec);
+    result_vec = _mm256_fmadd_pd(mat_col_2, vec_2, result_vec);
+    result_vec = _mm256_fmadd_pd(mat_col_3, vec_3, result_vec);
+    _mm256_storeu_pd(&result_data[0], result_vec);
 
     return result;
 }
