@@ -31,13 +31,12 @@ auto hsum_pd_avx(__m256d v) -> double
 }
 
 template <typename InIt>
-auto mean_impl(InIt first, InIt last)
+auto mean_impl(InIt first, std::ptrdiff_t n)
     -> typename std::iterator_traits<InIt>::value_type
-    requires (std::same_as<typename std::iterator_traits<InIt>::value_type, float>)
+    requires std::same_as<typename std::iterator_traits<InIt>::value_type, float>
 {
     using T = typename std::iterator_traits<InIt>::value_type;
     constexpr std::ptrdiff_t simd_elements = 256 / sizeof(T) / 8;
-    std::ptrdiff_t const n = std::distance(first, last);
     T const* data = &*first;
 
     __m256 sum_8xf32 = _mm256_setzero_ps();
@@ -49,6 +48,7 @@ auto mean_impl(InIt first, InIt last)
     }
     T sum = hsum_ps_avx(sum_8xf32);
 
+    // TODO unroll to prevent compiler optimizations
     for(; i < n; ++i)
     {
         sum += data[i];
@@ -58,13 +58,12 @@ auto mean_impl(InIt first, InIt last)
 }
 
 template <typename InIt>
-auto mean_impl(InIt first, InIt last)
+auto mean_impl(InIt first, std::ptrdiff_t n)
     -> typename std::iterator_traits<InIt>::value_type
-    requires (std::same_as<typename std::iterator_traits<InIt>::value_type, double>)
+    requires std::same_as<typename std::iterator_traits<InIt>::value_type, double>
 {
     using T = typename std::iterator_traits<InIt>::value_type;
     constexpr std::ptrdiff_t simd_elements = 256 / sizeof(T) / 8;
-    std::ptrdiff_t const n = std::distance(first, last);
     T const* data = &*first;
 
     __m256d sum_4xf64 = _mm256_setzero_pd();
@@ -76,12 +75,85 @@ auto mean_impl(InIt first, InIt last)
     }
     T sum = hsum_pd_avx(sum_4xf64);
 
+    // TODO unroll to prevent compiler optimizations
     for(; i < n; ++i)
     {
         sum += data[i];
     }
 
     return sum / T(n);
+}
+
+template <typename InIt>
+auto mean_and_variance_impl(InIt first, std::ptrdiff_t n)
+    -> std::pair
+    <
+        typename std::iterator_traits<InIt>::value_type,
+        typename std::iterator_traits<InIt>::value_type
+    >
+    requires std::same_as<typename std::iterator_traits<InIt>::value_type, float>
+{
+    using T = typename std::iterator_traits<InIt>::value_type;
+    constexpr std::ptrdiff_t simd_elements = 256 / sizeof(T) / 8;
+    T const* data = &*first;
+
+    T const mean = mean_impl(first, n);
+    __m256 vmean = _mm256_set1_ps(mean);
+    __m256 vvariance_n = _mm256_setzero_ps();
+    std::ptrdiff_t i = 0;
+    for (; n - i >= simd_elements; i += simd_elements)
+    {
+        __m256 values = _mm256_loadu_ps(&data[i]);
+        values = _mm256_sub_ps(values, vmean);
+        values = _mm256_mul_ps(values, values);
+        vvariance_n = _mm256_add_ps(vvariance_n, values);
+    }
+    T variance_n = hsum_ps_avx(vvariance_n);
+
+    // TODO unroll to prevent compiler optimizations
+    for(; i < n; ++i)
+    {
+        T const value = data[i] - mean;
+        variance_n += value * value;
+    }
+
+    return {mean, variance_n};
+}
+
+template <typename InIt>
+auto mean_and_variance_impl(InIt first, std::ptrdiff_t n)
+    -> std::pair
+    <
+        typename std::iterator_traits<InIt>::value_type,
+        typename std::iterator_traits<InIt>::value_type
+    >
+    requires std::same_as<typename std::iterator_traits<InIt>::value_type, double>
+{
+    using T = typename std::iterator_traits<InIt>::value_type;
+    constexpr std::ptrdiff_t simd_elements = 256 / sizeof(T) / 8;
+    T const* data = &*first;
+
+    T const mean = mean_impl(first, n);
+    __m256d vmean = _mm256_set1_pd(mean);
+    __m256d vvariance_n = _mm256_setzero_pd();
+    std::ptrdiff_t i = 0;
+    for (; n - i >= simd_elements; i += simd_elements)
+    {
+        __m256d values = _mm256_loadu_pd(&data[i]);
+        values = _mm256_sub_pd(values, vmean);
+        values = _mm256_mul_pd(values, values);
+        vvariance_n = _mm256_add_pd(vvariance_n, values);
+    }
+    T variance_n = hsum_pd_avx(vvariance_n);
+
+    // TODO unroll to prevent compiler optimizations
+    for(; i < n; ++i)
+    {
+        T const value = data[i] - mean;
+        variance_n += value * value;
+    }
+
+    return {mean, variance_n};
 }
 
 } // namespace st::detail
