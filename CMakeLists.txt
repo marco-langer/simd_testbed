@@ -6,6 +6,7 @@ include(GNUInstallDirs)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+find_package(Boost 1.74 REQUIRED)
 find_package(fmt REQUIRED)
 
 # Options
