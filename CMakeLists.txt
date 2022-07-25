@@ -8,6 +8,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Boost 1.74 REQUIRED)
 find_package(fmt REQUIRED)
+find_package(OpenCV REQUIRED)
 
 # Options
 option(WITH_TESTS "Enable building of tests" ON)

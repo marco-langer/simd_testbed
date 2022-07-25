@@ -3,14 +3,19 @@
 
 #include "random.hpp"
 
+#include <simd_testbed/integer_literals.hpp>
+
+#include <cstdint>
 #include <vector>
 
 namespace st::utilities {
 
 template <std::integral I>
-[[nodiscard]] auto generate_random_data() -> std::vector<I>
+[[nodiscard]] auto generate_random_data(std::size_t elements = 1024 * 1024)
+    -> std::vector<I>
 {
-    constexpr auto elements = 1024 * 1024;
+    using namespace st::literals::integer_literals;
+
     auto result = std::vector<I>{};
     result.reserve(elements);
 
@@ -19,7 +24,7 @@ template <std::integral I>
         std::numeric_limits<I>::max() - 5
     };
 
-    for (auto i = 0; i < elements; ++i)
+    for (auto i = 0_uz; i < elements; ++i)
     {
         result.push_back(random());
     }
